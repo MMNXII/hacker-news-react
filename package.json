@@ -1,7 +1,7 @@
 {
   "name": "hacker-stories",
   "version": "0.1.0",
-  "homepage": "hackernews.matthewmneal.com",
+  "homepage": "https://hackernews.matthewmneal.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",

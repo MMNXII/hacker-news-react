@@ -1,14 +1,8 @@
 import React, { div, Fragment, useState } from 'react';
 import './App.css';
+import styled from 'styled-components';
 
 const App = () => {
-  const [state, setState] = useState('yes');
-  const toggle = () => {
-    state === 'yes' ? setState('no') : setState('yes');
-  };
-
-  const greeting = 'hello';
-
   const stories = [
     {
       title: 'React',
@@ -28,27 +22,21 @@ const App = () => {
     },
   ];
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <div>
-      <Search />
+      <Search searchTerm={searchTerm} onChange={handleChange} />
+
       <hr />
 
       <List stories={stories} />
-      <p>{state}</p>
-      <Greeting greeting={greeting} state={state} />
-      <Button onClick={toggle} />
     </div>
   );
 };
-
-const Greeting = ({ greeting, state }) =>
-  state === 'yes' ? <h1>{greeting}</h1> : null;
-
-const Button = ({ onClick }) => (
-  <button onClick={onClick} type='button'>
-    Click
-  </button>
-);
 
 const List = ({ stories }) =>
   stories.map((item) => (
@@ -62,20 +50,29 @@ const List = ({ stories }) =>
     </div>
   ));
 
-const Search = () => {
-  return (
-    <Fragment>
-      <h1>My Hacker Stories</h1>
+const Search = ({ searchTerm, onChange }) => (
+  <Fragment>
+    <HeaderDiv>
+      <Header>My Hacker Stories</Header>
+    </HeaderDiv>
 
-      <label htmlFor='search'>Search:</label>
-      <input id='search' type='text' maxLength='10' onChange={handleChange} />
-    </Fragment>
-  );
-};
+    <label htmlFor='search'>Search: </label>
+    <input id='search' type='text' onChange={onChange} />
 
-const handleChange = (event) => {
-  const value = event.target.value;
-  console.log(value);
-};
+    <p>
+      Searching for <strong>{searchTerm}</strong>.
+    </p>
+  </Fragment>
+);
+
+///////Styles///////
+const Header = styled.h1`
+  text-align: center;
+  color: #31234a;
+  font-size: 4em;
+`;
+const HeaderDiv = styled.div`
+  background-color: #cbc1de;
+`;
 
 export default App;

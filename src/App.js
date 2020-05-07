@@ -1,4 +1,4 @@
-import React, { div, Fragment, useState } from 'react';
+import React, { div, useState } from 'react';
 import './App.css';
 import styled from 'styled-components';
 
@@ -23,17 +23,39 @@ const App = () => {
   ];
 
   const [searchTerm, setSearchTerm] = useState('');
-  const handleChange = (event) => {
+
+  const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  const searchedStories = stories.filter((story) => {
+    return story.title.includes(searchTerm);
+  });
+
   return (
     <div>
-      <Search searchTerm={searchTerm} onChange={handleChange} />
+      <Header />
+
+      <Search onSearch={handleSearch} />
 
       <hr />
 
-      <List stories={stories} />
+      <List stories={searchedStories} />
+    </div>
+  );
+};
+
+const Header = () => (
+  <HeadingDiv>
+    <Heading>My Hacker Stories</Heading>
+  </HeadingDiv>
+);
+
+const Search = ({ onSearch }) => {
+  return (
+    <div>
+      <label htmlFor='search'>Search: </label>
+      <input id='search' type='text' onChange={onSearch} />
     </div>
   );
 };
@@ -50,29 +72,14 @@ const List = ({ stories }) =>
     </div>
   ));
 
-const Search = ({ searchTerm, onChange }) => (
-  <Fragment>
-    <HeaderDiv>
-      <Header>My Hacker Stories</Header>
-    </HeaderDiv>
-
-    <label htmlFor='search'>Search: </label>
-    <input id='search' type='text' onChange={onChange} />
-
-    <p>
-      Searching for <strong>{searchTerm}</strong>.
-    </p>
-  </Fragment>
-);
-
 ///////Styles///////
-const Header = styled.h1`
+const HeadingDiv = styled.div`
+  background-color: #cbc1de;
+`;
+const Heading = styled.h1`
   text-align: center;
   color: #31234a;
   font-size: 4em;
-`;
-const HeaderDiv = styled.div`
-  background-color: #cbc1de;
 `;
 
 export default App;

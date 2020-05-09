@@ -22,21 +22,19 @@ const App = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('React');
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  const handleSearch = (event) => setSearchTerm(event.target.value);
 
-  const searchedStories = stories.filter((story) => {
-    return story.title.includes(searchTerm);
-  });
+  const searchedStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
       <Header />
 
-      <Search onSearch={handleSearch} />
+      <Search search={searchTerm} onSearch={handleSearch} />
 
       <hr />
 
@@ -51,11 +49,11 @@ const Header = () => (
   </HeadingDiv>
 );
 
-const Search = ({ onSearch }) => {
+const Search = ({ onSearch, search }) => {
   return (
     <div>
       <label htmlFor='search'>Search: </label>
-      <input id='search' type='text' onChange={onSearch} />
+      <input value={search} id='search' type='text' onChange={onSearch} />
     </div>
   );
 };
@@ -79,7 +77,7 @@ const HeadingDiv = styled.div`
 const Heading = styled.h1`
   text-align: center;
   color: #31234a;
-  font-size: 4em;
+  font-size: 3em;
 `;
 
 export default App;

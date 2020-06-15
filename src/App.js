@@ -61,7 +61,7 @@ const App = () => {
         onInputChange={handleSearch}
         isFocused
       >
-        <SearchText label='Search: ' />
+        <SearchText label='Search Stories: ' />
       </InputWithLabel>
 
       <hr />

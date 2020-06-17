@@ -21,6 +21,11 @@ const initialStories = [
   },
 ];
 
+const getAsyncStories = () =>
+  new Promise((resolve) =>
+    setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
+  );
+
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = useState(localStorage.getItem(key) || initialState);
 
@@ -33,8 +38,20 @@ const useSemiPersistentState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
+  const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const [stories, setStories] = useState(initialStories);
+  useEffect(() => {
+    setIsLoading(true);
+
+    getAsyncStories()
+      .then((result) => {
+        setStories(result.data.stories);
+        setIsLoading(false);
+      })
+      .catch(() => setIsError(true));
+  }, []);
 
   const handleRemoveStory = (item) => {
     const newStories = stories.filter(
@@ -65,8 +82,10 @@ const App = () => {
       </InputWithLabel>
 
       <hr />
-
-      <List stories={searchedStories} onRemoveItem={handleRemoveStory} />
+      <Error isError={isError} />
+      <Loading isLoading={isLoading}>
+        <List stories={searchedStories} onRemoveItem={handleRemoveStory} />
+      </Loading>
     </div>
   );
 };
@@ -121,9 +140,9 @@ const List = ({ stories, onRemoveItem }) =>
 const Item = ({ item, onRemoveItem }) => (
   <div>
     <span>
-      <a href={item.url}>{item.title}</a>
+      <a href={item.url}>{item.title} </a>
     </span>
-    <span>{item.author}</span>
+    <span>{item.author} </span>
     <span>{item.num_comments}</span>
     <span>{item.points}</span>
     <span>
@@ -133,6 +152,13 @@ const Item = ({ item, onRemoveItem }) => (
     </span>
   </div>
 );
+
+const Error = ({ isError }) => {
+  return isError && <p>Error!</p>;
+};
+const Loading = ({ isLoading, children }) => {
+  return isLoading ? <LoadingTxt>Loading...</LoadingTxt> : children;
+};
 
 ///////Styles///////
 
@@ -150,6 +176,9 @@ const Heading = styled.h1`
   text-align: center;
   color: #31234a;
   font-size: 3em;
+`;
+const LoadingTxt = styled.h3`
+  color: #31234a;
 `;
 
 export default App;
